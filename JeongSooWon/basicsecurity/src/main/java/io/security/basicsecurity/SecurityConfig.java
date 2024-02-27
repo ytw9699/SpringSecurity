@@ -24,7 +24,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     .authorizeRequests() //보안검사 시작  : 인가정책
                     .anyRequest().authenticated();//어떠한 요청에도 인증 받도록 : 인가정책
             http
-                    .formLogin()//인증정책 폼 로그인
+                    .formLogin()//인증정책 폼 로그인 : UsernamePasswordAuthenticationFilter 생성
                     //.loginPage("/loginPage")
                     .defaultSuccessUrl("/")
                     .failureUrl("/login")
