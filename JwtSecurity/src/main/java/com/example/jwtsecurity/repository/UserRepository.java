@@ -1,11 +1,9 @@
 package com.example.jwtsecurity.repository;
 
-import com.example.jwtsecurity.entity.User;
+import com.example.jwtsecurity.entity.UserEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface UserRepository extends JpaRepository<User, Integer> {
+public interface UserRepository extends JpaRepository<UserEntity, Integer> {
 
     Boolean existsByUsername(String username);
-
-    User findByUsername(String username);
 }
