@@ -1,5 +1,6 @@
 package com.example.jwtsecurity.config;
 
+import com.example.jwtsecurity.jwt.JWTUtil;
 import com.example.jwtsecurity.jwt.LoginFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -19,6 +20,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig {
 
     private final AuthenticationConfiguration authenticationConfiguration;
+    private final JWTUtil jwtUtil;
 
     @Bean
     public BCryptPasswordEncoder bCryptPasswordEncoder() {
@@ -60,7 +62,7 @@ public class SecurityConfig {
 
         http
                 .addFilterAt( //UsernamePasswordAuthenticationFilter자리에 LoginFilter로 대체
-                            new LoginFilter(authenticationManager(authenticationConfiguration)),
+                            new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil),
                             UsernamePasswordAuthenticationFilter.class);
 
 
