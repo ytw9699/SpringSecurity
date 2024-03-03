@@ -21,7 +21,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
     private final AuthenticationManager authenticationManager;
     private final JWTUtil jwtUtil;
-    private Long expiredMs = 60*60*10L;
+    private Long expiredMs = 60*60*100L;
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request,

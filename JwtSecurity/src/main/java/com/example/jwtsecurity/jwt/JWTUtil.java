@@ -32,7 +32,7 @@ public class JWTUtil {
     public Boolean isExpired(Jws<Claims> claims) {//토큰 만료확인
         return claims.getPayload().getExpiration().before(new Date());//현재시간과 비교
     }
-    public Jws<Claims> getClaims(String token){//verifyWith 토큰이 우리서버에서 생성된건지, 우리가 가지고있는 키랑 맞는지 확인
+    public Jws<Claims> verifyWith(String token){//verifyWith 토큰이 우리서버에서 생성된건지, 우리가 가지고있는 키랑 맞는지 확인
         return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token);
     }
 
