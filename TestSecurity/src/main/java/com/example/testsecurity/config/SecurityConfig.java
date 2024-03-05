@@ -21,6 +21,15 @@ public class SecurityConfig {
                         .anyRequest().authenticated()//로그인 해야만
                 );
 
+        http
+                .formLogin((auth) -> auth.loginPage("/login")
+                        .loginProcessingUrl("/loginProc")
+                        .permitAll()
+                );
+
+        http
+                .csrf((auth) -> auth.disable());//사이트 위변조 방지 설정 잠시 끄기
+
         return http.build();
     }
 }
