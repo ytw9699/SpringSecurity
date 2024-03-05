@@ -21,7 +21,8 @@ public class SecurityConfig {
 
         http
                 .authorizeHttpRequests((auth) -> auth
-                        .requestMatchers("/", "/login", "/h2-console/**").permitAll()//모두에게
+                        .requestMatchers("/", "/h2-console/**", "/login",
+                                                  "/loginProc", "/join", "/joinProc").permitAll()//모두에게
                         .requestMatchers("/admin").hasRole("ADMIN")//어드민만
                         .requestMatchers("/my/**").hasAnyRole("ADMIN", "USER")//2개 롤만
                         .anyRequest().authenticated()//로그인 해야만
