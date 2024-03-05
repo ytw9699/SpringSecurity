@@ -14,7 +14,13 @@ public class JoinService {
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    public void joinProcess(JoinDTO joinDTO) {
+    public boolean joinProcess(JoinDTO joinDTO) {
+
+        boolean isUser = userRepository.existsByUsername(joinDTO.getUsername());
+
+        if (isUser) {
+            return false;
+        }
 
         UserEntity data = new UserEntity();
                    data.setUsername(joinDTO.getUsername());
@@ -22,5 +28,7 @@ public class JoinService {
                    data.setRole("ROLE_USER");
 
         userRepository.save(data);
+
+        return true;
     }
 }

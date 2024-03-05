@@ -25,8 +25,12 @@ public class JoinController {
 
         log.info(joinDTO.getUsername());
 
-        joinService.joinProcess(joinDTO);
+        boolean result = joinService.joinProcess(joinDTO);
 
-        return "redirect:/login";
+        if (result == true){
+            return "redirect:/login";
+        }else {
+            return "join";
+        }
     }
 }
