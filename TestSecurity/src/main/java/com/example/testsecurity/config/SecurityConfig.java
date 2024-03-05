@@ -2,6 +2,7 @@ package com.example.testsecurity.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -28,11 +29,14 @@ public class SecurityConfig {
                         .anyRequest().authenticated()//로그인 해야만
                 );
 
-        http
+       /* http
                 .formLogin((auth) -> auth.loginPage("/login")
                         .loginProcessingUrl("/loginProc")
                         .permitAll()
-                );
+                );*/
+
+        http
+                .httpBasic(Customizer.withDefaults());
 
         http //csrf enable 하면서 h2-console은 csrf 설정 제거
                 .csrf((auth) -> auth.ignoringRequestMatchers("/h2-console/**"));
