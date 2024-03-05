@@ -34,8 +34,8 @@ public class SecurityConfig {
                         .permitAll()
                 );
 
-        http
-                .csrf((auth) -> auth.disable());//사이트 위변조 방지 설정 잠시 끄기
+        http //csrf enable 하면서 h2-console은 csrf 설정 제거
+                .csrf((auth) -> auth.ignoringRequestMatchers("/h2-console/**"));
 
         http
                 .headers(headers -> headers.frameOptions(frameOptions -> frameOptions.disable()));
