@@ -2,6 +2,8 @@ package com.example.testsecurity.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
+import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -25,18 +27,18 @@ public class SecurityConfig {
                         .requestMatchers("/", "/h2-console/**", "/login",
                                                   "/loginProc", "/join", "/joinProc").permitAll()//모두에게
                         .requestMatchers("/admin").hasRole("ADMIN")//어드민만
-                        .requestMatchers("/my/**").hasAnyRole("ADMIN", "USER")//2개 롤만
+                        .requestMatchers("/my/**").hasAnyRole("MANAGER", "USER")
                         .anyRequest().authenticated()//로그인 해야만
                 );
 
-       /* http
+        http
                 .formLogin((auth) -> auth.loginPage("/login")
                         .loginProcessingUrl("/loginProc")
                         .permitAll()
-                );*/
+                );
 
-        http
-                .httpBasic(Customizer.withDefaults());
+        /*http
+                .httpBasic(Customizer.withDefaults());*/
 
         http //csrf enable 하면서 h2-console은 csrf 설정 제거
                 .csrf((auth) -> auth.ignoringRequestMatchers("/h2-console/**"));
@@ -54,5 +56,16 @@ public class SecurityConfig {
                         .sessionFixation().changeSessionId());//세션 고정 보호
 
         return http.build();
+    }
+
+    @Bean
+    public RoleHierarchy roleHierarchy() {
+
+        RoleHierarchyImpl hierarchy = new RoleHierarchyImpl();
+
+        hierarchy.setHierarchy("ROLE_ADMIN > ROLE_MANAGER\n" +
+                "ROLE_MANAGER > ROLE_USER");
+
+        return hierarchy;
     }
 }
