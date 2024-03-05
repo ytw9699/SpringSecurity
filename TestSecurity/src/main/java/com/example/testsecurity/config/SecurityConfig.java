@@ -21,7 +21,7 @@ public class SecurityConfig {
 
         http
                 .authorizeHttpRequests((auth) -> auth
-                        .requestMatchers("/", "/login").permitAll()//모두에게
+                        .requestMatchers("/", "/login", "/h2-console/**").permitAll()//모두에게
                         .requestMatchers("/admin").hasRole("ADMIN")//어드민만
                         .requestMatchers("/my/**").hasAnyRole("ADMIN", "USER")//2개 롤만
                         .anyRequest().authenticated()//로그인 해야만
@@ -35,6 +35,10 @@ public class SecurityConfig {
 
         http
                 .csrf((auth) -> auth.disable());//사이트 위변조 방지 설정 잠시 끄기
+
+        http
+                .headers(headers -> headers.frameOptions(frameOptions -> frameOptions.disable()));
+                //추가하지 않으면 h2 console 접근 안됨
 
         return http.build();
     }
