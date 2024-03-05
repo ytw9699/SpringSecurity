@@ -40,6 +40,14 @@ public class SecurityConfig {
         http
                 .headers(headers -> headers.frameOptions(frameOptions -> frameOptions.disable()));
                 //추가하지 않으면 h2 console 접근 안됨
+        http
+                .sessionManagement((auth) -> auth
+                        .maximumSessions(1)//하나의 아이디에 대한 다중 로그인 허용 개수
+                        .maxSessionsPreventsLogin(false));//초과시 기존 세션 하나 삭제
+                                                          //true : 초과시 새로운 로그인 차단
+        http
+                .sessionManagement((auth) -> auth
+                        .sessionFixation().changeSessionId());//세션 고정 보호
 
         return http.build();
     }
