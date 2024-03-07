@@ -2,10 +2,12 @@ package com.example.jwtsecurity.jwt;
 
 import com.example.jwtsecurity.dto.CustomUserDetails;
 import jakarta.servlet.FilterChain;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -38,8 +40,41 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         return authenticationManager.authenticate(authToken);
     }
 
+
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response,
+                                            FilterChain chain, Authentication authentication) {
+
+        //유저 정보
+        String username = authentication.getName();
+
+        Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
+        Iterator<? extends GrantedAuthority> iterator = authorities.iterator();
+        GrantedAuthority auth = iterator.next();
+        String role = auth.getAuthority();
+
+        //토큰 생성
+        String access = jwtUtil.createJwt("access", username, role, 600000L);//10분
+        String refresh = jwtUtil.createJwt("refresh", username, role, 86400000L);//24시간
+
+        //응답 설정
+        response.setHeader("access", access);
+        response.addCookie(createCookie("refresh", refresh));
+        response.setStatus(HttpStatus.OK.value());
+    }
+
+    private Cookie createCookie(String key, String value) {
+
+        Cookie cookie = new Cookie(key, value);
+        cookie.setMaxAge(86400);
+        //cookie.setSecure(true);//https 이면 넣어줌
+        //cookie.setPath("/");//적용될 범위
+        cookie.setHttpOnly(true);//자스 접근못하게
+
+        return cookie;
+    }
+
+    /*protected void successfulAuthenticationV1(HttpServletRequest request, HttpServletResponse response,
                                             FilterChain chain, Authentication authentication) {
 
         log.info("successfulAuthentication success");
@@ -57,7 +92,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         String token = jwtUtil.createJwt(username, role, expiredMs);
 
         response.addHeader("Authorization", "Bearer " + token);//RFC 7235 정의에 따름
-    }
+    }*/
 
     @Override
     protected void unsuccessfulAuthentication(HttpServletRequest request,

@@ -36,8 +36,13 @@ public class JWTUtil {
         return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token);
     }
 
-    public String createJwt(String username, String role, Long expiredMs) {//expiredMs 살아 있을 시간
+    public String getCategory(Jws<Claims> claims) {
+        return claims.getPayload().get("category", String.class);
+    }
+
+    public String createJwt(String category, String username, String role, Long expiredMs) {//expiredMs 살아 있을 시간
         return Jwts.builder()
+                        .claim("category", category)//토큰 종류 access, refresh
                         .claim("username", username)//페이로드
                         .claim("role", role)//페이로드
                         .issuedAt(new Date(System.currentTimeMillis()))//현재 발행 시간

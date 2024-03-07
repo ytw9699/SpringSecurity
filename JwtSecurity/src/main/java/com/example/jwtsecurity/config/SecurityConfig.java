@@ -17,7 +17,6 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
-
 import java.util.Collections;
 
 @RequiredArgsConstructor
@@ -57,9 +56,11 @@ public class SecurityConfig {
         // 경로별 인가작업
         http
                 .authorizeHttpRequests((auth) -> auth
-                        .requestMatchers("/login", "/", "/join").permitAll()
+                        .requestMatchers("/login", "/", "/join" ,"/h2-console/**").permitAll()
                         .requestMatchers("/admin").hasRole("ADMIN")
                         .anyRequest().authenticated());
+       http
+            .headers(headers -> headers.frameOptions(frameOptions -> frameOptions.disable()));
 
         //세션 STATELESS 설정
         http
