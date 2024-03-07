@@ -24,15 +24,23 @@ public class SecurityConfig {
                 .formLogin((login) -> login.disable());
         http
                 .httpBasic((basic) -> basic.disable());
+
         http
                 .oauth2Login((oauth2) -> oauth2//oauth2Login가 필터 및 나머지 설정 자동으로해줌
+                        .loginPage("/login")
                         .userInfoEndpoint((userInfoEndpointConfig) -> userInfoEndpointConfig
                                 .userService(customOAuth2UserService))
                 );
         http
                 .authorizeHttpRequests((auth) -> auth
-                        .requestMatchers("/", "/oauth2/**", "/login/**").permitAll()
+                        .requestMatchers("/", "/oauth2/**", "/login/**", "/h2-console/**").permitAll()
                         .anyRequest().authenticated());
+        http
+                .headers(headers -> headers.frameOptions(frameOptions -> frameOptions.disable()));
+        //추가하지 않으면 h2 console 접근 안됨
+
+       /* http //csrf enable 하면서 h2-console은 csrf 설정 제거
+                .csrf((auth) -> auth.ignoringRequestMatchers("/h2-console/**"));*/
 
         return http.build();
     }
