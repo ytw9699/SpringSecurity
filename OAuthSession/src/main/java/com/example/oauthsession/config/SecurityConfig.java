@@ -1,5 +1,6 @@
 package com.example.oauthsession.config;
 
+import com.example.oauthsession.oauth2.CustomClientRegistrationRepo;
 import com.example.oauthsession.service.CustomOAuth2UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -14,6 +15,7 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfig {
 
     private final CustomOAuth2UserService customOAuth2UserService;
+    private final CustomClientRegistrationRepo customClientRegistrationRepo;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -28,6 +30,7 @@ public class SecurityConfig {
         http
                 .oauth2Login((oauth2) -> oauth2//oauth2Login가 필터 및 나머지 설정 자동으로해줌
                         .loginPage("/login")
+                        .clientRegistrationRepository(customClientRegistrationRepo.clientRegistrationRepository())
                         .userInfoEndpoint((userInfoEndpointConfig) -> userInfoEndpointConfig
                                 .userService(customOAuth2UserService))
                 );
