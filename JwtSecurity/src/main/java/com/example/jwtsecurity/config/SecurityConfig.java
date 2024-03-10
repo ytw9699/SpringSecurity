@@ -56,7 +56,7 @@ public class SecurityConfig {
         // 경로별 인가작업
         http
                 .authorizeHttpRequests((auth) -> auth
-                        .requestMatchers("/login", "/", "/join" ,"/h2-console/**").permitAll()
+                        .requestMatchers("/login", "/", "/join" ,"/reissue","/h2-console/**").permitAll()
                         .requestMatchers("/admin").hasRole("ADMIN")
                         .anyRequest().authenticated());
        http
